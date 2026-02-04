@@ -1,0 +1,70 @@
+{
+  "sony_hd": {
+    "name": "SONY HD",
+    "url": "http://87.255.35.150:18809/"
+  },
+  "sony_sab_hd": {
+    "name": "SONY SAB HD",
+    "url": "http://87.255.35.150:18810/"
+  },
+  "sony_max_hd": {
+    "name": "SONY MAX HD",
+    "url": "http://87.255.35.150:18851/"
+  },
+  "sony_ten_1_hd": {
+    "name": "SONY TEN 1 HD",
+    "url": "http://103.140.254.2:3500/live/162.m3u8"
+  },
+  "sony_ten_1": {
+    "name": "SONY TEN 1",
+    "url": "http://103.140.254.2:3500/live/514.m3u8"
+  },
+  "sony_ten_2": {
+    "name": "SONY TEN 2",
+    "url": "http://103.140.254.2:3500/live/523.m3u8"
+  },
+  "sony_ten_3_hd": {
+    "name": "SONY TEN 3 HD",
+    "url": "http://87.255.35.150:18848/"
+  },
+  "sony_ten_3": {
+    "name": "SONY TEN 3",
+    "url": "http://103.140.254.2:3500/live/524.m3u8"
+  },
+  "sony_ten_5": {
+    "name": "SONY TEN 5",
+    "url": "http://103.140.254.2:3500/live/525.m3u8"
+  },
+  "sony_liv_1": {
+    "name": "SONY LIV 1",
+    "url": "http://103.140.254.2:3500/live/3372.m3u8"
+  },
+  "sony_liv_2": {
+    "name": "SONY LIV 2",
+    "url": "http://103.140.254.2:3500/live/3373.m3u8"
+  },
+  "sony_liv_3": {
+    "name": "SONY LIV 3",
+    "url": "http://103.140.254.2:3500/live/3374.m3u8"
+  },
+  "sony_liv_4": {
+    "name": "SONY LIV 4",
+    "url": "http://103.140.254.2:3500/live/3397.m3u8"
+  },
+  "sony_liv_4_alt": {
+    "name": "SONY LIV 4 (Alt)",
+    "url": "http://103.140.254.2:3500/live/3399.m3u8"
+  },
+  "sony_entertainment_hd": {
+    "name": "Sony Entertainment Television HD",
+    "url": "http://103.60.204.26:3255/SonyEntertainmentTelevisionHD/tracks-v1a1/mono.m3u8"
+  },
+  "sony_max": {
+    "name": "SONY MAX",
+    "url": "http://103.140.254.2:3500/live/289.m3u8"
+  },
+  "sony_max_2": {
+    "name": "SONY MAX 2",
+    "url": "http://103.140.254.2:3500/live/483.m3u8"
+  }
+  }
