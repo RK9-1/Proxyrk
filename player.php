@@ -1,10 +1,13 @@
 <?php
 $id = $_GET['id'] ?? '';
-$channels = include "channels.json";
 
-if (!isset($channels[$id])) {
+$json = file_get_contents("channels.json");
+$channels = json_decode($json, true);
+
+if (!$channels || !isset($channels[$id])) {
     die("Invalid Channel");
 }
+
 $c = $channels[$id];
 ?>
 
@@ -29,7 +32,7 @@ html,body{margin:0;background:#000;height:100%}
 <script>
 jwplayer("player").setup({
     file: "proxy.php?c=<?php echo $id; ?>",
-    image: "<?php echo $c['logo']; ?>",
+    image: "<?php echo $c['logo'] ?? ''; ?>",
     autostart: true,
     width: "100%",
     height: "100%",
