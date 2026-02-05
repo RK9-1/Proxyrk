@@ -2,7 +2,7 @@
 // ==========================================
 // 🚀 CONFIGURATION & SECURITY
 // ==========================================
-$allowed_domains = ['allinonereborn.xyz', 'localhost']; // Add domains here
+$allowed_domains = ['sonyliv-la38.onrender.com', 'localhost']; // Add domains here
 $channels_file = 'channels.json';
 
 // 1. 🛡️ FIREWALL: Referer Protection
