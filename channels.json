@@ -83,5 +83,10 @@
     "name": "SONY MAX 2",
     "logo": "https://i.imgur.com/your-logo.png",
     "url": "http://103.140.254.2:3500/live/483.m3u8"
-  }
+  },
+  "m3u_bundle": {
+  "name": "SONY M3U BUNDLE",
+  "logo": "https://i.imgur.com/w9c2iO1.png",
+  "url": "https://m3uplaylist-plum.vercel.app/output.m3u8"
+}
 }
