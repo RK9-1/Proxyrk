@@ -1,128 +1,91 @@
 <?php
 $id = $_GET['id'] ?? '';
-
-// Load channels
 $json_data = @file_get_contents("channels.json");
 $channels = json_decode($json_data, true);
 
+// Fallback to first channel if ID invalid
 if (!$channels || !isset($channels[$id])) {
-    die("<div style='color:white; background:#222; padding:20px; font-family:sans-serif; text-align:center;'>
-            <h2>❌ Channel Not Found</h2>
-            <p>The ID <b>".htmlspecialchars($id)."</b> does not exist in your list.</p>
-         </div>");
+    $id = array_key_first($channels);
 }
 
 $c = $channels[$id];
 $stream_url = "proxy.php?c=" . $id;
-$logo = $c['logo'] ?? 'https://via.placeholder.com/200x100?text=No+Logo';
 ?>
 
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>Watching: <?php echo $c['name']; ?></title>
+    <title>Stream: <?php echo $c['name']; ?></title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     
     <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
     <script src="https://cdn.jsdelivr.net/npm/artplayer/dist/artplayer.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 
     <style>
-        * { box-sizing: border-box; }
-        body, html { 
-            margin: 0; padding: 0; width: 100%; height: 100%; 
-            background-color: #050505; 
-            font-family: 'Inter', sans-serif;
-            overflow: hidden;
-            color: #fff;
+        :root { --primary: #E50914; --glass: rgba(20, 20, 20, 0.95); }
+        body, html { margin: 0; padding: 0; width: 100%; height: 100%; background: #000; font-family: sans-serif; overflow: hidden; }
+
+        .menu-btn {
+            position: absolute; top: 20px; left: 20px; z-index: 100;
+            background: var(--primary); color: white; border: none;
+            padding: 10px 15px; border-radius: 5px; cursor: pointer;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.5); font-size: 1.2rem;
         }
 
-        /* Container for the player */
-        .main-container {
-            display: flex;
-            flex-direction: column;
-            width: 100vw;
-            height: 100vh;
+        .sidebar {
+            position: fixed; top: 0; left: -320px; width: 300px; height: 100%;
+            background: var(--glass); backdrop-filter: blur(10px);
+            z-index: 99; transition: 0.3s ease;
+            border-right: 1px solid #333; display: flex; flex-direction: column;
         }
+        .sidebar.active { left: 0; }
 
-        /* Top Bar / Header */
-        .player-header {
-            padding: 15px 25px;
-            background: linear-gradient(to bottom, rgba(0,0,0,0.8) 0%, transparent 100%);
-            position: absolute;
-            top: 0; left: 0; right: 0;
-            z-index: 10;
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            pointer-events: none; /* Let clicks pass to player */
+        .sidebar-header { padding: 20px; background: #000; color: var(--primary); font-weight: bold; font-size: 1.5rem; text-align: center; }
+        .channel-list { flex: 1; overflow-y: auto; padding: 10px; }
+        
+        .channel-item {
+            display: block; padding: 12px; margin-bottom: 5px;
+            color: #ccc; text-decoration: none; border-radius: 5px;
+            transition: 0.2s; font-size: 0.9rem;
         }
+        .channel-item:hover, .channel-item.active { background: var(--primary); color: white; }
 
-        .channel-logo {
-            height: 40px;
-            width: auto;
-            border-radius: 5px;
-            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.5));
-        }
-
-        .channel-info h1 {
-            margin: 0;
-            font-size: 1.2rem;
-            font-weight: 700;
-            text-shadow: 0 2px 4px rgba(0,0,0,0.8);
-        }
-
-        /* The Player itself */
-        #artplayer {
-            width: 100%;
-            height: 100%;
-            flex: 1;
-        }
-
-        /* Error Message Overlay */
-        .art-error-custom {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            background: #111;
-            color: #ff4d4d;
-        }
+        #artplayer { width: 100%; height: 100%; }
     </style>
 </head>
 <body>
 
-    <div class="main-container">
-        <div class="player-header">
-            <img src="<?php echo $logo; ?>" alt="Logo" class="channel-logo">
-            <div class="channel-info">
-                <h1><?php echo $c['name']; ?></h1>
-            </div>
-        </div>
+    <button class="menu-btn" onclick="toggleSidebar()"><i class="fas fa-bars"></i></button>
 
-        <div id="artplayer"></div>
+    <div class="sidebar" id="sidebar">
+        <div class="sidebar-header">LIVE TV</div>
+        <div class="channel-list">
+            <?php foreach ($channels as $key => $val): ?>
+                <a href="?id=<?php echo $key; ?>" class="channel-item <?php echo ($id == $key) ? 'active' : ''; ?>">
+                    <?php echo $val['name']; ?>
+                </a>
+            <?php endforeach; ?>
+        </div>
     </div>
 
+    <div id="artplayer"></div>
+
     <script>
+        function toggleSidebar() {
+            document.getElementById('sidebar').classList.toggle('active');
+        }
+
         const art = new Artplayer({
             container: '#artplayer',
             url: '<?php echo $stream_url; ?>',
             type: 'm3u8',
             setting: true,
-            pip: true,
+            autoplay: true,
             fullscreen: true,
             fullscreenWeb: true,
-            autoSize: false,
-            autoMini: true,
-            screenshot: true,
-            cast: true, // Google Cast Support
-            playbackRate: true,
-            aspectRatio: true,
-            theme: '#E50914', // Netflix Red
-            icons: {
-                loading: '<img src="https://i.gifer.com/ZZ5H.gif" width="50">',
-            },
+            theme: '#E50914',
             customType: {
                 m3u8: function (video, url) {
                     if (Hls.isSupported()) {
@@ -131,24 +94,9 @@ $logo = $c['logo'] ?? 'https://via.placeholder.com/200x100?text=No+Logo';
                         hls.attachMedia(video);
                     } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
                         video.src = url;
-                    } else {
-                        art.notice.show = 'Unsupported Browser';
                     }
                 },
             },
-        });
-
-        // Automatically start playback
-        art.on('ready', () => {
-            art.play().catch(() => {
-                art.notice.show = 'Click to Play';
-            });
-        });
-
-        // Handle errors gracefully
-        art.on('video:error', () => {
-            console.error("Video Error Detected");
-            art.notice.show = 'Stream Offline or Proxy Error';
         });
     </script>
 </body>
